@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idelfag <idelfag@student.42.fr>            +#+  +:+       +#+        */
+/*   By: idelfag <idelfag@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 10:04:10 by idelfag           #+#    #+#             */
-/*   Updated: 2022/11/07 11:57:21 by idelfag          ###   ########.fr       */
+/*   Updated: 2023/12/28 20:38:22 by idelfag          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	join = ft_memcpy(join, s2, ft_strlen(s2));
 	join += ft_strlen(s2);
 	join[0] = '\0';
+	free((char *)s1);
 	return (start);
 }

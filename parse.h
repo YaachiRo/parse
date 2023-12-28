@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idelfag < idelfag@student.1337.ma>         +#+  +:+       +#+        */
+/*   By: idelfag <idelfag@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 23:05:53 by idelfag           #+#    #+#             */
-/*   Updated: 2023/12/22 06:47:15 by idelfag          ###   ########.fr       */
+/*   Updated: 2023/12/28 21:40:06 by idelfag          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,21 @@
 # define PARSE_H
 
 # include "libft/libft.h"
-# include "get_next_line/get_next_line.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <float.h>
+#include <time.h>
+#include <stdint.h>
+#include <limits.h>
+#include <fcntl.h>
+
+enum
+{
+	SPHERE,
+	PLANE,
+	CYLINDER
+};
 
 typedef struct s_vec3
 {
@@ -140,19 +154,25 @@ typedef struct s_parse
 	t_camera cam;
 	t_light light;
 	t_ambient ambient_light;
-	t_object obj;
+	t_object *obj;
 }				t_parse;
 
 
 void	free_tab(char **tab);
+int		ft_tablen(char **tab);
 int		ft_isspace(int c);
 void	message_exit(char *msg, int n);
 char    **ft_split_two(char *str, char *charset);
 float	parse_number(char *str, int *index);
-void	skip_char(char *line, char c, int *index);
+void	skip_char(char *line, char c, int *index, char* str);
 void	get_content(t_vars *vars, t_parse *parse);
 void	parse_camera(char **line, t_parse *parse);
 void	parse_ambient(char **line,t_parse *parse);
 void	parse_light(char **line, t_parse *parse);
+void	parse_sphere(char **line, t_parse *parse, int *index);
+void	parse_plane(char **line, t_parse *parse, int *index);
+void	parse_cylender(char **line, t_parse *parse, int *index);
+t_vec3	normalized(t_vec3 a);
+int		ft_strcmp(char *s1, char *s2);
 
 #endif

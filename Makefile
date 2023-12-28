@@ -1,13 +1,12 @@
 
 NAME = check
 
-SRCS =	get_next_line/get_next_line.c \
-		get_next_line/get_next_line_utils.c \
-		tools.c \
+SRCS =	tools.c \
 		parse.c \
 		whitesplit.c \
 		camera_light.c \
-		get_type.c
+		get_type.c		\
+		objects.c 		\
 
 RM = rm -rf
 
@@ -15,9 +14,9 @@ CC = cc
 
 OBJS = ${SRCS:.c=.o}
 
-CFLAGS = -Wall -Wextra  -fsanitize=address -g3
+CFLAGS = -Wall -Wextra -Werror #-fsanitize=address -g3
 
-LDFLAGS = -Llibft -lft
+LDFLAGS = -Llibft -lft -lm
 
 all: libft ${NAME}
 
