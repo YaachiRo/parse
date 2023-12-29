@@ -1,12 +1,18 @@
 
 NAME = check
 
-SRCS =	tools.c \
-		parse.c \
-		whitesplit.c \
-		camera_light.c \
-		get_type.c		\
-		objects.c 		\
+SRCS =	tools.c 				\
+		tools2.c 				\
+		tools3.c 				\
+		parse.c 				\
+		whitesplit.c 			\
+		camera.c 				\
+		light.c 				\
+		ambient_lightning.c 	\
+		get_type.c				\
+		cylender.c 				\
+		sphere.c				\
+		plane.c 				\
 
 RM = rm -rf
 

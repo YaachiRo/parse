@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idelfag < idelfag@student.1337.ma>         +#+  +:+       +#+        */
+/*   By: idelfag <idelfag@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/27 16:16:06 by idelfag           #+#    #+#             */
-/*   Updated: 2023/12/22 04:40:44 by idelfag          ###   ########.fr       */
+/*   Updated: 2023/12/29 14:23:50 by idelfag          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static char	*get_word(const char *s, char sep, size_t *j)
 	ft_strlcpy(word, s + start, (len + 1));
 	return (word);
 }
- 
+
 static char	**ft_free(char **tab, int n)
 {
 	int	i;
