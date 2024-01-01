@@ -6,7 +6,7 @@
 /*   By: idelfag <idelfag@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 13:15:30 by idelfag           #+#    #+#             */
-/*   Updated: 2023/12/29 14:11:39 by idelfag          ###   ########.fr       */
+/*   Updated: 2024/01/01 18:19:46 by idelfag          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,73 +29,87 @@ int	check_cylender(t_object *obj)
 	return (1);
 }
 
-void	cylender_position(char **line, t_parse *parse, int *index, int *i)
+void	cylender_position(char **line, t_vars *vars, int *index, int *i)
 {
 	int	j;
 
 	j = 0;
-	parse->obj[*index].type = CYLINDER;
-	parse->obj[*index].translation.x = parse_number(line[*i], &j);
-	skip_char(line[*i], ',', &j, "cylender");
-	parse->obj[*index].translation.y = parse_number(line[*i], &j);
-	skip_char(line[*i], ',', &j, "cylender");
-	parse->obj[*index].translation.z = parse_number(line[*i], &j);
+	vars->parse.obj[*index].type = CYLINDER;
+	vars->parse.obj[*index].translation.x = parse_number(line[*i], &j, vars);
+	skip_char(line[*i], ',', &j, vars);
+	vars->parse.obj[*index].translation.y = parse_number(line[*i], &j, vars);
+	skip_char(line[*i], ',', &j, vars);
+	vars->parse.obj[*index].translation.z = parse_number(line[*i], &j, vars);
 	if (line[*i][j])
-		message_exit("Error while parcing cylender infos\n", 1);
+		msg_exit_free("parsing cylender infos\n", 1, vars);
 	(*i)++;
 }
 
-void	cylender_dnormal(char **line, t_parse *parse, int *index, int *i)
+void	cylender_dnormal(char **line, t_vars *vars, int *index, int *i)
 {
 	int	j;
 
 	j = 0;
-	parse->obj[*index].d_normal.x = parse_number(line[*i], &j);
-	skip_char(line[*i], ',', &j, "cylender");
-	parse->obj[*index].d_normal.y = parse_number(line[*i], &j);
-	skip_char(line[*i], ',', &j, "cylender");
-	parse->obj[*index].d_normal.z = parse_number(line[*i], &j);
-	parse->obj[*index].d_normal = normalized(parse->obj->d_normal);
+	vars->parse.obj[*index].d_normal.x = parse_number(line[*i], &j, vars);
+	skip_char(line[*i], ',', &j, vars);
+	vars->parse.obj[*index].d_normal.y = parse_number(line[*i], &j, vars);
+	skip_char(line[*i], ',', &j, vars);
+	vars->parse.obj[*index].d_normal.z = parse_number(line[*i], &j, vars);
 	if (line[*i][j])
-		message_exit("Error while parcing cylender infos\n", 1);
+		msg_exit_free("parsing cylender infos\n", 1, vars);
 	(*i)++;
 }
 
-void	cylender_scale_color(char **line, t_parse *parse, int *index, int *i)
+void	cylender_scale_color(char **line, t_vars *vars, int *index, int *i)
 {
 	int	j;
 
 	j = 0;
-	parse->obj[*index].scale.x = (parse_number(line[*i], &j) / 2.f);
+	vars->parse.obj[*index].scale.x = (parse_number(line[*i], &j, vars) / 2.f);
 	j = 0;
-	parse->obj[*index].scale.y = (parse_number(line[*i], &j) / 2.f);
+	vars->parse.obj[*index].scale.y = (parse_number(line[*i], &j, vars) / 2.f);
 	(*i)++;
 	j = 0;
-	parse->obj[*index].scale.z = parse_number(line[*i], &j);
+	vars->parse.obj[*index].scale.z = parse_number(line[*i], &j, vars);
 	if (line[*i][j])
-		message_exit("Error while parcing cylender infos\n", 1);
+		msg_exit_free("parsing cylender infos\n", 1, vars);
 	(*i)++;
 	j = 0;
-	parse->obj[*index].base_color.x = (parse_number(line[*i], &j) / 255.f);
-	skip_char(line[*i], ',', &j, "cylender");
-	parse->obj[*index].base_color.y = (parse_number(line[*i], &j) / 255.f);
-	skip_char(line[*i], ',', &j, "cylender");
-	parse->obj[*index].base_color.z = (parse_number(line[*i], &j) / 255.f);
+	vars->parse.obj[*index].base_color.x = parse_number(line[*i], &j, vars);
+	skip_char(line[*i], ',', &j, vars);
+	vars->parse.obj[*index].base_color.y = parse_number(line[*i], &j, vars);
+	skip_char(line[*i], ',', &j, vars);
+	vars->parse.obj[*index].base_color.z = parse_number(line[*i], &j, vars);
+	vars->parse.obj[*index].base_color.x /= 255.f;
+	vars->parse.obj[*index].base_color.y /= 255.f;
+	vars->parse.obj[*index].base_color.z /= 255.f;
 	if (line[*i][j])
-		message_exit("Error while parcing cylender infos\n", 1);
+		msg_exit_free("parsing cylender infos\n", 1, vars);
 }
 
-void	parse_cylender(char **line, t_parse *parse, int *index)
+void	parse_cylender(char **line, t_vars *vars, int *index)
 {
 	int	i;
 
 	i = 1;
-	if (ft_tablen(line) != 6)
-		message_exit("Error while parcing cylender infos\n", 1);
-	cylender_position(line, parse, index, &i);
-	cylender_dnormal(line, parse, index, &i);
-	cylender_scale_color(line, parse, index, &i);
-	if (!check_cylender(&(parse->obj[*index])))
-		message_exit("Error while parcing cylender infos\n", 1);
+	if (!(ft_tablen(line) >= 6 && ft_tablen(line) <= 15))
+		msg_exit_free("parsing cylender infos\n", 1, vars);
+	cylender_position(line, vars, index, &i);
+	cylender_dnormal(line, vars, index, &i);
+	cylender_scale_color(line, vars, index, &i);
+	while(line[i])
+	{
+		if (line[i] == 'r' || line[i] == 'r')
+			parse_reflectivity(line, vars, index, &i);
+		else if (line[i] == 't')
+			parse_texture(line, vars, index, &i);
+		else if (line[i] == 'b')
+			parse_bump(line, vars, index, &i);
+		else
+			msg_exit_free("Unknown key\n", 1, vars);
+		i++;
+	}
+	if (!check_cylender(&(vars->parse.obj[*index])))
+		msg_exit_free("parsing cylender infos\n", 1, vars);
 	(*index)++;
 }

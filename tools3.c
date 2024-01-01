@@ -6,7 +6,7 @@
 /*   By: idelfag <idelfag@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 14:22:03 by idelfag           #+#    #+#             */
-/*   Updated: 2023/12/29 14:30:13 by idelfag          ###   ########.fr       */
+/*   Updated: 2024/01/01 15:01:31 by idelfag          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,18 @@ int	ft_tablen(char **tab)
 
 void	message_exit(char *msg, int n)
 {
-	write(2, "Error\n", 6);
+	write(2, "Error\n", 7);
+	write(2, msg, ft_strlen(msg));
+	exit(n);
+}
+
+void	msg_exit_free(char *msg, int n, t_vars *vars)
+{
+	if (vars->parse.obj)
+		free(vars->parse.obj);
+	free_tab(vars->lines);
+	free_tab(vars->line);
+	write(2, "Error\n", 7);
 	write(2, msg, ft_strlen(msg));
 	exit(n);
 }

@@ -57,19 +57,23 @@ CC = cc
 
 CFLAGS	=	-Wall -Wextra -Werror
 
-all:		${NAME}
+all: ${NAME}
 
-${NAME}:	${OBJS}
-			ar -rc ${NAME} ${OBJS}
+${NAME}: ${OBJS}
+	@ar -rc ${NAME} ${OBJS}
+
+%.o : %.c
+	@$(CC) $(CFLAGS) -c $< -o $@
+
 bonus:		${OBJS} ${OBJBONUS}
-			ar -rc ${NAME} ${OBJS} ${OBJBONUS}
+	@ar -rc ${NAME} ${OBJS} ${OBJBONUS}
 
 clean:
-		${RM} ${OBJS} ${OBJBONUS}
+	@${RM} ${OBJS} ${OBJBONUS}
 
-fclean:		clean
-			${RM} ${NAME}
+fclean: clean
+	@${RM} ${NAME}
 
-re:			fclean all
+re:	fclean all
 
-.PHONY:		clean fclean all re
+.PHONY: clean fclean all re

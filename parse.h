@@ -6,7 +6,7 @@
 /*   By: idelfag <idelfag@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 23:05:53 by idelfag           #+#    #+#             */
-/*   Updated: 2023/12/29 14:39:40 by idelfag          ###   ########.fr       */
+/*   Updated: 2024/01/01 18:09:36 by idelfag          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,29 @@
 # define PARSE_H
 
 # include "libft/libft.h"
-# include <stdio.h>
-# include <stdlib.h>
 # include <math.h>
-# include <float.h>
-# include <time.h>
-# include <stdint.h>
-# include <limits.h>
 # include <fcntl.h>
 
 enum
 {
 	SPHERE,
 	PLANE,
-	CYLINDER
+	CYLINDER,
+	CONE
 };
+
+enum
+{
+	CHECKERBOARD,
+	TEXTURE,
+	NO_TEXTURE
+};
+
+typedef struct s_vec2
+{
+	float	u;
+	float	v;
+}	t_vec2;
 
 typedef struct s_vec3
 {
@@ -37,25 +45,28 @@ typedef struct s_vec3
 	float	z;
 }				t_vec3;
 
-typedef struct s_vec2
-{
-	float	u;
-	float	v;
-}				t_vec2;
-
-typedef struct s_image
-{
-	float	**red;
-	float	**green;
-	float	**blue;
-}				t_image;
-
 typedef struct s_light
 {
 	t_vec3	position;
 	t_vec3	color;
 	float	intensity;
 }			t_light;
+
+typedef struct s_matrix
+{
+	int		rows;
+	int		cols;
+	float	**matrix;
+}	t_matrix;
+
+typedef struct	s_data
+{
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+}	t_data;
 
 typedef struct s_camera
 {
@@ -74,29 +85,6 @@ typedef struct s_camera
 	int		fov;
 }				t_camera;
 
-typedef struct s_ray
-{
-	t_vec3	point1;
-	t_vec3	point2;
-	t_vec3	dir;
-}				t_ray;
-
-typedef struct s_matrix
-{
-	int		rows;
-	int		cols;
-	float	**matrix;
-}			t_matrix;
-
-typedef struct s_data
-{
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-}				t_data;
-
 typedef struct s_info
 {
 	struct s_object	*e;
@@ -104,6 +92,13 @@ typedef struct s_info
 	t_vec3			localnormal;
 	t_vec2			uv;
 }				t_info;
+
+typedef struct s_ray
+{
+	t_vec3	point1;
+	t_vec3	point2;
+	t_vec3	dir;
+}	t_ray;
 
 typedef struct s_object
 {
@@ -120,21 +115,21 @@ typedef struct s_object
 	int			has_texture;
 	int			has_material;
 	t_matrix	*checker_matrix;
+	t_vec2		c_scale;
 	t_data		*image;
 	t_data		*imgnormal;
 	int			(*intersect)(t_ray*, struct s_info *);
-}				t_object;
+	int			texture_type;
+	char		*texture_path;
+	char		*bump_path;
+	int			has_bump;
+}	t_object;
 
 typedef struct s_ambient
 {
 	float	ambient_ratio;
 	t_vec3	rgb;
 }				t_ambient;
-
-typedef struct s_vars
-{
-	char	**lines;
-}				t_vars;
 
 typedef struct s_parse
 {
@@ -144,21 +139,50 @@ typedef struct s_parse
 	t_object	*obj;
 }				t_parse;
 
+typedef struct s_image
+{
+	float	**red;
+	float	**green;
+	float	**blue;
+}	t_image;
+
+typedef struct s_vars
+{
+	void			*mlx_ptr;
+	void			*win_ptr;
+	t_image			*image;
+	t_light			*lights;
+	t_object		*objects;
+	t_camera		cam;
+	t_vec3			*buffer;
+	unsigned int	rng_state;
+	int				frames;
+	char			**lines;
+	t_parse			parse;
+	int				obj_count;
+	char			**line;
+}	t_vars;
+
 void	free_tab(char **tab);
 int		ft_tablen(char **tab);
 int		ft_isspace(int c);
 void	message_exit(char *msg, int n);
 char	**ft_split_two(char *str, char *charset);
-float	parse_number(char *str, int *index);
-void	skip_char(char *line, char c, int *index, char *str);
-void	get_content(t_vars *vars, t_parse *parse);
-void	parse_camera(char **line, t_parse *parse);
-void	parse_ambient(char **line, t_parse *parse);
-void	parse_light(char **line, t_parse *parse);
-void	parse_sphere(char **line, t_parse *parse, int *index);
-void	parse_plane(char **line, t_parse *parse, int *index);
-void	parse_cylender(char **line, t_parse *parse, int *index);
+float	parse_number(char *str, int *index, t_vars *vars);
+void	skip_char(char *line, char c, int *index, t_vars *vars);
+void	get_content(t_vars *vars);
+void	parse_camera(char **line, t_vars *vars);
+void	parse_ambient(char **line, t_vars *vars);
+void	parse_light(char **line, t_vars *vars);
+void	parse_sphere(char **line, t_vars *vars, int *index);
+void	parse_plane(char **line, t_vars *vars, int *index);
+void	parse_cylender(char **line, t_vars *vars, int *index);
 t_vec3	normalized(t_vec3 a);
 int		ft_strcmp(char *s1, char *s2);
+void	parse(int ac, char **av, t_vars *vars);
+void	msg_exit_free(char *msg, int n, t_vars *vars);
+void	parse_reflectivity(char **line, t_vars *vars, int *index, int *i);
+void	parse_texture(char **line, t_vars *vars, int *index, int *i);
+void	parse_bump(char **line, t_vars *vars, int *index, int *i);
 
 #endif

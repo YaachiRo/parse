@@ -6,7 +6,7 @@
 /*   By: idelfag <idelfag@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 23:36:15 by idelfag           #+#    #+#             */
-/*   Updated: 2023/12/29 14:10:23 by idelfag          ###   ########.fr       */
+/*   Updated: 2024/01/01 14:48:57 by idelfag          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,52 +25,52 @@ int	check_cam_error(t_camera *cam)
 	return (1);
 }
 
-void	camera_position(char **line, t_parse *parse, int *i)
+void	camera_position(char **line, t_vars *vars, int *i)
 {
 	int	j;
 
 	j = 0;
-	parse->cam.origin.x = parse_number(line[*i], &j);
-	skip_char(line[*i], ',', &j, "camera");
-	parse->cam.origin.y = parse_number(line[*i], &j);
-	skip_char(line[*i], ',', &j, "camera");
-	parse->cam.origin.z = parse_number(line[*i], &j);
+	vars->parse.cam.origin.x = parse_number(line[*i], &j, vars);
+	skip_char(line[*i], ',', &j, vars);
+	vars->parse.cam.origin.y = parse_number(line[*i], &j, vars);
+	skip_char(line[*i], ',', &j, vars);
+	vars->parse.cam.origin.z = parse_number(line[*i], &j, vars);
 	if (line[*i][j])
-		message_exit("Error while parcing camera infos\n", 1);
+		msg_exit_free("parsing camera infos\n", 1, vars);
 	(*i)++;
 }
 
-void	camera_lookat_fov(char **line, t_parse *parse, int *i)
+void	camera_lookat_fov(char **line, t_vars *vars, int *i)
 {
 	int		j;
 	float	tmp;
 
 	j = 0;
-	parse->cam.lookat.x = parse_number(line[*i], &j);
-	skip_char(line[*i], ',', &j, "camera");
-	parse->cam.lookat.y = parse_number(line[*i], &j);
-	skip_char(line[*i], ',', &j, "camera");
-	parse->cam.lookat.z = parse_number(line[*i], &j);
+	vars->parse.cam.lookat.x = parse_number(line[*i], &j, vars);
+	skip_char(line[*i], ',', &j, vars);
+	vars->parse.cam.lookat.y = parse_number(line[*i], &j, vars);
+	skip_char(line[*i], ',', &j, vars);
+	vars->parse.cam.lookat.z = parse_number(line[*i], &j, vars);
 	if (line[*i][j])
-		message_exit("Error while parcing camera infos\n", 1);
+		msg_exit_free("parsing camera infos\n", 1, vars);
 	(*i)++;
 	j = 0;
-	parse->cam.fov = ft_atoi(line[*i]);
-	tmp = parse_number(line[*i], &j);
+	vars->parse.cam.fov = ft_atoi(line[*i]);
+	tmp = parse_number(line[*i], &j, vars);
 	(void)tmp;
 	if (line[*i][j])
-		message_exit("Error while parcing camera infos\n", 1);
+		msg_exit_free("parsing camera infos\n", 1, vars);
 }
 
-void	parse_camera(char **line, t_parse *parse)
+void	parse_camera(char **line, t_vars *vars)
 {
 	int	i;
 
 	i = 1;
 	if (ft_tablen(line) != 4)
-		message_exit("Error while parcing camera infos\n", 1);
-	camera_position(line, parse, &i);
-	camera_lookat_fov(line, parse, &i);
-	if (!check_cam_error(&(parse->cam)))
-		message_exit("Error while parcing camera infos\n", 1);
+		msg_exit_free("parsing camera infos\n", 1, vars);
+	camera_position(line, vars, &i);
+	camera_lookat_fov(line, vars, &i);
+	if (!check_cam_error(&(vars->parse.cam)))
+		msg_exit_free("parsing camera infos\n", 1, vars);
 }

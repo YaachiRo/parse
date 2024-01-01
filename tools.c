@@ -6,27 +6,19 @@
 /*   By: idelfag <idelfag@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 23:05:45 by idelfag           #+#    #+#             */
-/*   Updated: 2023/12/29 14:30:53 by idelfag          ###   ########.fr       */
+/*   Updated: 2024/01/01 16:28:17 by idelfag          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
 
-void	skip_char(char *line, char c, int *index, char *str)
+void	skip_char(char *line, char c, int *index, t_vars *vars)
 {
 	if (line[*index] != c || !line[*index])
-	{
-		write(2, "error while parcing ", 21);
-		ft_putendl_fd(str, 2);
-		exit(1);
-	}
+		msg_exit_free("Error\n check configuration file\n", 1, vars);
 	(*index)++;
 	if (!line[*index])
-	{
-		write(2, "error while parcing ", 21);
-		ft_putendl_fd(str, 2);
-		exit(1);
-	}
+		msg_exit_free("Error\n check configuration file\n", 1, vars);
 }
 
 int	ft_isspace(int c)
@@ -59,7 +51,7 @@ float	get_fractal_part(char *str, int *index, int sign)
 	return (res);
 }
 
-float	get_number(char *str, int *index, int sign)
+float	get_number(char *str, int *index, int sign, t_vars *vars)
 {
 	float	res;
 	int		i;
@@ -67,7 +59,7 @@ float	get_number(char *str, int *index, int sign)
 	i = *index;
 	res = 0.0;
 	if (!ft_isdigit(str[i]))
-		message_exit("parsing Number", 1);
+		msg_exit_free("Error\nparsing Number", 1, vars);
 	while (ft_isdigit(str[i]))
 	{
 		res = 10 * res + sign * (str[i] - '0');
@@ -78,7 +70,7 @@ float	get_number(char *str, int *index, int sign)
 	return (res);
 }
 
-float	parse_number(char *str, int *index)
+float	parse_number(char *str, int *index, t_vars *vars)
 {
 	int		i;
 	float	res;
@@ -93,9 +85,9 @@ float	parse_number(char *str, int *index)
 	{
 		if (str[i] == '-')
 			sign = -1;
-		skip_char(str, str[i], &i, "number");
+		skip_char(str, str[i], &i, vars);
 	}
-	res = get_number(str, &i, sign);
+	res = get_number(str, &i, sign, vars);
 	while (str[i] && ft_isspace(str[i]))
 		i++;
 	*index = i;
