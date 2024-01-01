@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_type.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idelfag <idelfag@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: idelfag < idelfag@student.1337.ma>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 23:05:59 by idelfag           #+#    #+#             */
-/*   Updated: 2024/01/01 15:31:48 by idelfag          ###   ########.fr       */
+/*   Updated: 2024/01/01 22:49:25 by idelfag          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ void	parse_line(t_vars *vars, int *index)
 		parse_plane(vars->line, vars, index);
 	else if (!ft_strcmp(vars->line[0], "cy"))
 		parse_cylender(vars->line, vars, index);
+	else if (!ft_strcmp(vars->line[0], "co"))
+		parse_cone(vars->line, vars, index);
 	else
 		msg_exit_free("bad configuration file\n", 1, vars);
 	free_tab(vars->line);

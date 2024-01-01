@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idelfag <idelfag@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: idelfag < idelfag@student.1337.ma>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 23:05:53 by idelfag           #+#    #+#             */
-/*   Updated: 2024/01/01 18:09:36 by idelfag          ###   ########.fr       */
+/*   Updated: 2024/01/01 22:49:43 by idelfag          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,7 @@ void	parse_light(char **line, t_vars *vars);
 void	parse_sphere(char **line, t_vars *vars, int *index);
 void	parse_plane(char **line, t_vars *vars, int *index);
 void	parse_cylender(char **line, t_vars *vars, int *index);
+void	parse_cone(char **line, t_vars *vars, int *index);
 t_vec3	normalized(t_vec3 a);
 int		ft_strcmp(char *s1, char *s2);
 void	parse(int ac, char **av, t_vars *vars);

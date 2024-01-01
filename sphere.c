@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sphere.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idelfag <idelfag@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: idelfag < idelfag@student.1337.ma>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 13:16:07 by idelfag           #+#    #+#             */
-/*   Updated: 2024/01/01 18:19:08 by idelfag          ###   ########.fr       */
+/*   Updated: 2024/01/01 23:11:59 by idelfag          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,31 +62,58 @@ void	sphere_color_radius(char **line, t_vars *vars, int *index, int *i)
 	(*i)++;
 }
 
-void	parse_reflectivity(char **line, t_vars *vars, int *index, int *i)
+void	reflectivity(char **line, t_vars *vars, int *index, int *i)
 {
 	int	j;
 
 	j = 0;
+	(*i)++;
+	vars->parse.obj[*index].reflectivity = parse_number(line[*i], &j, vars);
+	if (line[*i][j])
+		msg_exit_free("bad config file\n", 1, vars);
+	(*i)++;
+	j = 0;
+	if (line[*i][j] == 's')
+	{
+		(*i)++;
+		vars->parse.obj[*index].shininess = parse_number(line[*i], &j, vars);
+		if (line[*i][j])
+			msg_exit_free("bad config file\n", 1, vars);
+	}
+	else
+		msg_exit_free("bad config file\n", 1, vars);
+	vars->parse.obj[*index].has_material = 1;
+}
+
+void	shininess(char **line, t_vars *vars, int *index, int *i)
+{
+	int	j;
+
+	j = 0;
+	(*i)++;
+	vars->parse.obj[*index].shininess = parse_number(line[*i], &j, vars);
+	if (line[*i][j])
+		msg_exit_free("bad config file\n", 1, vars);
+	(*i)++;
+	j = 0;
 	if (line[*i][j] == 'r')
 	{
 		(*i)++;
-		vars->parse.obj[*index].reflectivity = parse_number(line[(*i)++], &j, vars);
-		if (line[(*i)++][j] == 's')
-			vars->parse.obj[*index].shininess = parse_number(line[*i], &j, vars);
-		else
+		vars->parse.obj[*index].reflectivity = parse_number(line[*i], &j, vars);
+		if (line[*i][j])
 			msg_exit_free("bad config file\n", 1, vars);
-		vars->parse.obj[*index].has_material = 1;
 	}
-	else if (line[*i][j] == 's')
-	{
-		(*i)++;
-		vars->parse.obj[*index].shininess = parse_number(line[(*i)++], &j, vars);
-		if (line[(*i)++][j] == 'r')
-			vars->parse.obj[*index].reflectivity = parse_number(line[*i], &j, vars);
-		else
-			msg_exit_free("bad config file\n", 1, vars);
-		vars->parse.obj[*index].has_material = 1;
-	}
+	else
+		msg_exit_free("bad config file\n", 1, vars);
+	vars->parse.obj[*index].has_material = 1;
+}
+
+void	parse_reflectivity(char **line, t_vars *vars, int *index, int *i)
+{
+	if (line[*i][0] == 'r')
+		reflectivity(line, vars, index, i);
+	else if (line[*i][0] == 's')
+		shininess(line, vars, index, i);	
 	else
 		vars->parse.obj[*index].has_material = 0;
 }
@@ -103,6 +130,8 @@ void	parse_texture(char **line, t_vars *vars, int *index, int *i)
 		vars->parse.obj[*index].c_scale.u = parse_number(line[*i], &j, vars);
 		skip_char(line[*i], ',', &j, vars);
 		vars->parse.obj[*index].c_scale.v = parse_number(line[*i], &j, vars);
+		if (line[*i][j])
+			msg_exit_free("bad config file\n", 1, vars);
 	}
 	else if (!ft_strcmp(line[*i], "NO_TEXTURE"))
 	{
@@ -122,11 +151,12 @@ void	parse_bump(char **line, t_vars *vars, int *index, int *i)
 	int	j;
 
 	j = 0;
+	
+	(*i)++;
 	if (!line[*i][j])
 		msg_exit_free("bump path path is not found\n", 1, vars);
 	vars->parse.obj[*index].has_bump = 2;
 	vars->parse.obj[*index].bump_path = ft_strdup(line[*i]);
-	(*i)++;
 }
 
 void	parse_sphere(char **line, t_vars *vars, int *index)
